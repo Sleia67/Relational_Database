@@ -51,10 +51,10 @@ CREATE TABLE public.games (
     game_id integer NOT NULL,
     year integer NOT NULL,
     round character varying(50) NOT NULL,
-    winner character varying(50) NOT NULL,
-    opponent character varying(50) NOT NULL,
+    winner_id integer NOT NULL,
+    opponent_id integer NOT NULL,
     winner_goals integer NOT NULL,
-    opponenet_goals integer NOT NULL
+    opponent_goals integer NOT NULL
 );
 
 
@@ -134,6 +134,38 @@ ALTER TABLE ONLY public.teams ALTER COLUMN team_id SET DEFAULT nextval('public.t
 -- Data for Name: games; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
+INSERT INTO public.games VALUES (1, 2018, 'Final', 51, 52, 4, 2);
+INSERT INTO public.games VALUES (2, 2018, 'Third Place', 53, 54, 2, 0);
+INSERT INTO public.games VALUES (3, 2018, 'Semi-Final', 52, 54, 2, 1);
+INSERT INTO public.games VALUES (4, 2018, 'Semi-Final', 51, 53, 1, 0);
+INSERT INTO public.games VALUES (5, 2018, 'Quarter-Final', 52, 55, 3, 2);
+INSERT INTO public.games VALUES (6, 2018, 'Quarter-Final', 54, 56, 2, 0);
+INSERT INTO public.games VALUES (7, 2018, 'Quarter-Final', 53, 57, 2, 1);
+INSERT INTO public.games VALUES (8, 2018, 'Quarter-Final', 51, 58, 2, 0);
+INSERT INTO public.games VALUES (9, 2018, 'Eighth-Final', 54, 59, 2, 1);
+INSERT INTO public.games VALUES (10, 2018, 'Eighth-Final', 56, 60, 1, 0);
+INSERT INTO public.games VALUES (11, 2018, 'Eighth-Final', 53, 61, 3, 2);
+INSERT INTO public.games VALUES (12, 2018, 'Eighth-Final', 57, 62, 2, 0);
+INSERT INTO public.games VALUES (13, 2018, 'Eighth-Final', 52, 63, 2, 1);
+INSERT INTO public.games VALUES (14, 2018, 'Eighth-Final', 55, 64, 2, 1);
+INSERT INTO public.games VALUES (15, 2018, 'Eighth-Final', 58, 65, 2, 1);
+INSERT INTO public.games VALUES (16, 2018, 'Eighth-Final', 51, 66, 4, 3);
+INSERT INTO public.games VALUES (17, 2014, 'Final', 67, 66, 1, 0);
+INSERT INTO public.games VALUES (18, 2014, 'Third Place', 68, 57, 3, 0);
+INSERT INTO public.games VALUES (19, 2014, 'Semi-Final', 66, 68, 1, 0);
+INSERT INTO public.games VALUES (20, 2014, 'Semi-Final', 67, 57, 7, 1);
+INSERT INTO public.games VALUES (21, 2014, 'Quarter-Final', 68, 69, 1, 0);
+INSERT INTO public.games VALUES (22, 2014, 'Quarter-Final', 66, 53, 1, 0);
+INSERT INTO public.games VALUES (23, 2014, 'Quarter-Final', 57, 59, 2, 1);
+INSERT INTO public.games VALUES (24, 2014, 'Quarter-Final', 67, 51, 1, 0);
+INSERT INTO public.games VALUES (25, 2014, 'Eighth-Final', 57, 70, 2, 1);
+INSERT INTO public.games VALUES (26, 2014, 'Eighth-Final', 59, 58, 2, 0);
+INSERT INTO public.games VALUES (27, 2014, 'Eighth-Final', 51, 71, 2, 0);
+INSERT INTO public.games VALUES (28, 2014, 'Eighth-Final', 67, 72, 2, 1);
+INSERT INTO public.games VALUES (29, 2014, 'Eighth-Final', 68, 62, 2, 1);
+INSERT INTO public.games VALUES (30, 2014, 'Eighth-Final', 69, 73, 2, 1);
+INSERT INTO public.games VALUES (31, 2014, 'Eighth-Final', 66, 60, 1, 0);
+INSERT INTO public.games VALUES (32, 2014, 'Eighth-Final', 53, 74, 2, 1);
 
 
 --
@@ -170,7 +202,7 @@ INSERT INTO public.teams VALUES (74, 'United States');
 -- Name: games_game_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.games_game_id_seq', 1, false);
+SELECT pg_catalog.setval('public.games_game_id_seq', 32, true);
 
 
 --
@@ -202,6 +234,22 @@ ALTER TABLE ONLY public.teams
 
 ALTER TABLE ONLY public.teams
     ADD CONSTRAINT teams_pkey PRIMARY KEY (team_id);
+
+
+--
+-- Name: games games_opponent_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.games
+    ADD CONSTRAINT games_opponent_id_fkey FOREIGN KEY (opponent_id) REFERENCES public.teams(team_id);
+
+
+--
+-- Name: games games_winner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.games
+    ADD CONSTRAINT games_winner_id_fkey FOREIGN KEY (winner_id) REFERENCES public.teams(team_id);
 
 
 --
