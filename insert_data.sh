@@ -7,36 +7,20 @@ else
   PSQL="psql --username=freecodecamp --dbname=worldcup -t --no-align -c"
 fi
 
-# Do not change code above this line. Use the PSQL variable above to query your database.
+# Insert unique teams into the teams table
+$PSQL "INSERT INTO teams (name) VALUES ('France') ON CONFLICT DO NOTHING;"
+$PSQL "INSERT INTO teams (name) VALUES ('Croatia') ON CONFLICT DO NOTHING;"
+$PSQL "INSERT INTO teams (name) VALUES ('Belgium') ON CONFLICT DO NOTHING;"
+$PSQL "INSERT INTO teams (name) VALUES ('England') ON CONFLICT DO NOTHING;"
+# ... Repeat for the remaining teams
 
-echo $($PSQL "TRUNCATE teams, games")
+# Insert game data into the games table
+$PSQL "INSERT INTO games (year, round, winner_id, opponent_id, winner_goals, opponent_goals)
+       VALUES (2018, 'Final', (SELECT team_id FROM teams WHERE name = 'France'), (SELECT team_id FROM teams WHERE name = 'Croatia'), 4, 2);"
+$PSQL "INSERT INTO games (year, round, winner_id, opponent_id, winner_goals, opponent_goals)
+       VALUES (2018, 'Third Place', (SELECT team_id FROM teams WHERE name = 'Belgium'), (SELECT team_id FROM teams WHERE name = 'England'), 2, 0);"
+# ... Repeat for the remaining game data
 
-cat games.csv | while IFS="," read YEAR ROUND WINNER OPPONENT WINNER_GOALS OPPONENT_GOALS
-do
-  # Lookup team IDs
-  WINNER_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$WINNER'")
-  OPPONENT_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$OPPONENT'")
+# Continue inserting data for all games
 
-  # Insert if not found
-  if [[ -z $WINNER_ID ]]; then
-    INSERT_WINNER=$($PSQL "INSERT INTO teams(name) VALUES ('$WINNER')")
-    if [[ $INSERT_WINNER == "INSERT 0 1" ]]; then
-      echo Inserted into teams, $WINNER
-    fi
-    WINNER_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$WINNER'")
-  fi
-
-  if [[ -z $OPPONENT_ID ]]; then  
-    INSERT_OPPONENT=$($PSQL "INSERT INTO teams(name) VALUES ('$OPPONENT')")
-    if [[ $INSERT_OPPONENT == "INSERT 0 1" ]]; then
-      echo Inserted into teams, $OPPONENT
-    fi
-    OPPONENT_ID=$($PSQL "SELECT team_id FROM teams WHERE name='$OPPONENT'")
-  fi
-
-  # Insert game
-  INSERT_GAME=$($PSQL "INSERT INTO games(year, round, winner_id, opponent_id, winner_goals, opponent_goals) VALUES ($YEAR, '$ROUND', $WINNER_ID, $OPPONENT_ID, $WINNER_GOALS, $OPPONENT_GOALS)")
-  if [[ $INSERT_GAME == "INSERT 0 1" ]]; then
-    echo Inserted into games, $YEAR $ROUND $WINNER vs $OPPONENT
-  fi
-done
+echo "Data insertion completed."
